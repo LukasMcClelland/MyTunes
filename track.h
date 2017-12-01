@@ -16,47 +16,33 @@
 /*  COMP 2404 students may reuse this content for    */
 /*  their course assignments without seeking consent */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-#ifndef _User_H
-#define _User_H
+#ifndef _TRACK_H
+#define _TRACK_H
 
 #include <ostream>
 #include <string>
-#include <vector>
-#include "playlist.h"
-#include "observer.h"
-#include "subject.h"
+using namespace std;
 
-class User: public observer {
+#include "song.h"
+
+class Track {
 	/*
-	User represents an application user.
+	Track represents a audio recording of a single Song
 	*/
 	public:
-	User(const string & aUserID, 
-	          const string & aName); 
-	~User(void);
-
-	void update(string PLName, int state, int id);
-
+	Track(const int aTrackID, Song * songptr, const string & anMp3FileName = "Unknown" ); 
+	~Track(void);
 	int getID();
-    string getUserID();
-	Playlist * findPlaylist(const string & aPlaylistName);
-	void removePlaylist(Playlist & aPlayList);
-	void addPlaylist(Playlist & aPlayList);
-	void removeTrack(Track & aTrack);
-	void executeAttach(User *sub, Playlist *pl);
-    string toString() const;
-	
+    Song * getSong();
+    string getMp3FileName();  
+	string toString() const;	
 	private:
-	static int nextUserNumericID;
-	int id; //numeric id for uniformity with other model classes
-	string userid;
-	string name;
-	vector<Playlist*> playlists;
-	vector<Playlist*>::iterator findPosition(Playlist & aPlaylist);
-	User(const User & aUser); //hide copy constructor in private section
+	int id;
+	Song * song; //song that tracks is a recording of
+	string mp3FileName;
+	Track(const Track & aTrack); //hide copy constructor in private section
 };
 
-ostream & operator<<(ostream & out, const User & aUser);
+ostream & operator<<(ostream & out, const Track & aTrack);
 
 #endif

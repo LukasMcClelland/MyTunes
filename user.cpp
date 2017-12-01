@@ -95,9 +95,22 @@ string User::toString()const {
 	return s;
 }
 
-void User::update(subject *t, int state, int id) {
-	observer::update(t, state, id);
+void User::update(string PLName, int state, int id) {
+	observer::update(PLName, state, id);
 }
+
+void User::executeAttach(User *sub, Playlist *pl)
+{
+	pl->subscribe(this,sub,pl);
+	Playlist subPL(pl->getName());
+	for (vector<Track*>::iterator itr = pl->getTracks().begin() ; itr != pl->getTracks().end(); ++itr)
+	{
+		Track *t = (*itr);//not sure if this makes a copy of the pointer maybe this should be a refrence
+        subPL.addTrack(*t);
+	}
+    sub->addPlaylist(subPL);
+
+};
 
 ostream & operator<<(ostream & out, const User & aUser){
 	out << aUser.toString() << endl;
