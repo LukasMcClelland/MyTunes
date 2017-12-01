@@ -373,23 +373,53 @@ void MyTunes::executeDeleteSong(Command cmd){
 }
 
 void MyTunes::executeCMDFOLLOW(Command cmd){
+    //check for proper syntax
 	if(cmd.hasToken("-u") && cmd.hasToken("-p") && cmd.hasToken("-f") && cmd.hasToken("follow")){
-		if(cmd.hasToken("stop")){
-			executeDetach(cmd);
-		}
-		else{
-			executeAttach(cmd);
-		}
+
+        string followerUserIdFromCMD = cmd.getToken("-u");
+        string followedUserIdFromCMD = cmd.getToken("-f");
+
+        //if user tries to follow their own playlist
+        if(followerUserIdFromCMD == followedUserIdFromCMD){
+            view.printOutput("\n\nA user cannot have a playlist that follows itself.\n");
+        }
+
+        //stop following a playlist
+        else if(cmd.hasToken("stop")){
+            User *followerToCheck = users.findByID(followerUserIdFromCMD);
+            if(followerToCheck->findPlaylist(cmd.getToken("-p")) != NULL) {
+                executeDetach(cmd);
+            }
+            else{
+                view.printOutput("\n\nCannot stop following a nonexistent playlist.\n");
+            }
+        }
+
+        //start following a playlist
+        else{
+            //make sure that both users have a playlist of the same name
+            User *followerToCheck = users.findByID(followerUserIdFromCMD);
+            User *followedToCheck = users.findByID(followedUserIdFromCMD);
+            if(followedToCheck->findPlaylist(cmd.getToken("-p")) != NULL && followerToCheck->findPlaylist(cmd.getToken("-p")) != NULL) {
+                executeAttach(cmd);
+            }
+            else{
+                view.printOutput("\n\nCannot follow that playlist.\nEach user must have an existing playlist of the same name.\n");
+            }
+
+        }
 	}
+
+    //command was entered improperly
 	else{
-		view.printOutput("\n\nInvalid follow playlist syntax.\n Try this format: 'follow -u userOneId -p playlistName -f userTwoId'\n");
+		view.printOutput("\n\nInvalid follow playlist syntax.\n    Try this format: 'follow -u userOneId -p playlistName -f userTwoId'\n");
 	}
 }
 
 void MyTunes::executeDetach(Command cmd){
-	cout << "DETACH CABLE";
+	cout << "\nDETACH CABLE\n";
 }
 
 void MyTunes::executeAttach(Command cmd){
-	cout << "FIRING TOW CABLE";
+	cout << "\nFIRING TOW CABLE\n";
 }
