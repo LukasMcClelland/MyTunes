@@ -45,6 +45,7 @@ class User: public observer {
 	void addPlaylist(Playlist & aPlayList);
 	void removeTrack(Track & aTrack);
 	void executeAttach(User *sub, Playlist *pl);
+    void executeDetach(User *sub, Playlist *pl);
     string toString() const;
 	
 	private:

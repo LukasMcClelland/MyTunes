@@ -112,6 +112,12 @@ void User::executeAttach(User *sub, Playlist *pl)
 
 };
 
+void User::executeDetach(User *sub, Playlist *pl)
+{
+    pl->unsub(this,sub,pl);
+}
+
+
 ostream & operator<<(ostream & out, const User & aUser){
 	out << aUser.toString() << endl;
 	return out;
