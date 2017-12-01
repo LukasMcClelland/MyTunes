@@ -23,10 +23,11 @@
 #include <ostream>
 #include <string>
 #include <vector>
-
 #include "playlist.h"
+#include "obs.h"
+#include "subject.h"
 
-class User: public observer {
+class User: public obs {
 	/*
 	User represents an application user.
 	*/
@@ -35,7 +36,7 @@ class User: public observer {
 	          const string & aName); 
 	~User(void);
 
-	void update(subject *t, int state, int id) override;
+	void update(Subject *t, int state, int id);
 
 	int getID();
     string getUserID();

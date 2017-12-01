@@ -22,12 +22,11 @@
 #include <ostream>
 #include <string>
 #include <vector>
-
 #include "track.h"
 #include "subject.h"
 
 
-class Playlist: public subject {
+class Playlist: public Subject {
 	/*
 	Playlist represents an user playlist of tracks.
 	*/
