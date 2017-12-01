@@ -24,10 +24,10 @@
 #include <string>
 #include <vector>
 #include "playlist.h"
-#include "obs.h"
+#include "observer.h"
 #include "subject.h"
 
-class User: public obs {
+class User: public observer {
 	/*
 	User represents an application user.
 	*/
