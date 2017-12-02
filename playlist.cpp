@@ -22,7 +22,7 @@
 using namespace std;
 
 #include "playlist.h"
-	
+
 Playlist::Playlist(const string & aPlaylistName){
 	cout << "Playlist(string&)" << endl;
 	name = aPlaylistName;
@@ -52,6 +52,8 @@ void Playlist::addTrack(Track & aTrack){
 	if(itr == tracks.end()) {
 		tracks.push_back(&aTrack);
 	}
+	notify(name, 1, 0);
+
 }
 
 void Playlist::removeTrack(Track & aTrack){
@@ -59,6 +61,7 @@ void Playlist::removeTrack(Track & aTrack){
 	if(itr != tracks.end()) {
 		tracks.erase(itr);
 	}
+	notify(name, -1, 0);
 }
 
 string Playlist::toString()const {
@@ -68,7 +71,7 @@ string Playlist::toString()const {
 	s.append("\n");
 	s.append(indent + indent + "Playlist Tracks:\n");
 	for (vector<Track*>::size_type i = 0 ; i < tracks.size(); i++){
-		   s.append(indent + indent + to_string(i) + " " + (tracks[i])->toString() + "\n");
+		s.append(indent + indent + to_string(i) + " " + (tracks[i])->toString() + "\n");
 	}
 
 	return s;
