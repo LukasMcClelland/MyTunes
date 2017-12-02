@@ -35,9 +35,6 @@ class User: public observer {
 	User(const string & aUserID, 
 	          const string & aName); 
 	~User(void);
-
-	void update(string PLName, int state, int id);
-
 	int getID();
     string getUserID();
 	Playlist * findPlaylist(const string & aPlaylistName);
@@ -46,6 +43,7 @@ class User: public observer {
 	void removeTrack(Track & aTrack);
 	void executeAttach(User *sub, Playlist *pl);
     void executeDetach(User *sub, Playlist *pl);
+	void update(string PLName, int state, int id, Playlist *sub);
     string toString() const;
 	
 	private:

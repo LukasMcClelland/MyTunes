@@ -43,15 +43,12 @@ User::~User(){
 	
 }
 int User::getID(){return id;}
-
 string User::getUserID(){return userid;}
-
 vector<Playlist*>::iterator User::findPosition(Playlist & aPlaylist){
 	for (vector<Playlist*>::iterator itr = playlists.begin() ; itr != playlists.end(); ++itr)
 		if(*itr == &aPlaylist) return itr;
 	return playlists.end();
 }
-
 Playlist* User::findPlaylist(const string & aPlaylistName){
 	for (vector<Playlist*>::iterator itr = playlists.begin() ; itr != playlists.end(); ++itr)
 		if(((*itr)->getName()).compare(aPlaylistName) == 0) return *itr;
@@ -64,7 +61,6 @@ void User::addPlaylist(Playlist & aPlaylist){
 		playlists.push_back(&aPlaylist);
 	}	
 }
-
 void User::removePlaylist(Playlist & aPlaylist){
 	vector<Playlist*>::iterator itr = findPosition(aPlaylist);
 	if(itr != playlists.end()) {
@@ -73,7 +69,6 @@ void User::removePlaylist(Playlist & aPlaylist){
 	   delete playlist;
 	}
 }
-
 void User::removeTrack(Track & aTrack){
 	for (vector<Playlist*>::iterator itr = playlists.begin() ; itr != playlists.end(); ++itr){
 		Playlist * playlist = *itr;
@@ -94,9 +89,18 @@ string User::toString()const {
 	
 	return s;
 }
+void User::update(string PLName, int state, int id, Playlist *sub) {
+	if(state == 1)
+	{
+		for(vector<Track*>::iterator itr = sub->getTracks().begin() ; itr != sub->getTracks().end(); ++itr)
+			if((*itr)->getID() == id){this->findPlaylist(PLName)->addTrack((**itr));}
+	}
+	else
+	{
+		for(vector<Track*>::iterator itr = this->findPlaylist(PLName)->getTracks().begin() ; itr != this->findPlaylist(PLName)->getTracks().end(); ++itr)
+			if((*itr)->getID() == id){this->findPlaylist(PLName)->removeTrack((**itr));}
+	}
 
-void User::update(string PLName, int state, int id) {
-	observer::update(PLName, state, id);
 }
 
 void User::executeAttach(User *sub, Playlist *pl)
