@@ -29,7 +29,16 @@ have already been tested with first script that is read upon app launch.
 
 Assingment ReV 4:
 
-the program now allows users to folow another users playlist 
+the program now allows users to subscribe and unSub another users playlist evectivly creating a copy of that playlist for the
+that will be updated by the master user
+
+Subscribe syntax example:
+
+	Follow -u ajones -p favourites -f fjones
+
+unSub syntax example: 
+
+	follow -u ajones -p favourites -s fjones
 
 Assingment ReV 4.1 Bonus:
 
