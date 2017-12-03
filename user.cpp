@@ -24,96 +24,110 @@ using namespace std;
 #include "user.h"
 
 int User::nextUserNumericID = 1000;
-	
+
 User::User(const string & aUserID, const string & aName){
-	cout << "User(string&, string&, int)" << endl;
-	userid = aUserID;
-	name = aName;
-	id = nextUserNumericID++;
+    cout << "User(string&, string&, int)" << endl;
+    userid = aUserID;
+    name = aName;
+    id = nextUserNumericID++;
 }
 User::User(const User & aUser){
-	cout << "User(const User & aUser)" << endl;
-	cout << "ERROR: User(const User & aUser) --should never run" << endl;
+    cout << "User(const User & aUser)" << endl;
+    cout << "ERROR: User(const User & aUser) --should never run" << endl;
 }
 User::~User(){
-	cout << "~User(void)" << endl;
-	//user objects own playlists
-	for(int i=0; i<playlists.size(); i++)
-		delete playlists[i]; //delete playlists this user owns
-	
+    cout << "~User(void)" << endl;
+    //user objects own playlists
+    for(int i=0; i<playlists.size(); i++)
+        delete playlists[i]; //delete playlists this user owns
+
 }
 int User::getID(){return id;}
 string User::getUserID(){return userid;}
 vector<Playlist*>::iterator User::findPosition(Playlist & aPlaylist){
-	for (vector<Playlist*>::iterator itr = playlists.begin() ; itr != playlists.end(); ++itr)
-		if(*itr == &aPlaylist) return itr;
-	return playlists.end();
+    for (vector<Playlist*>::iterator itr = playlists.begin() ; itr != playlists.end(); ++itr)
+        if(*itr == &aPlaylist) return itr;
+    return playlists.end();
 }
 Playlist* User::findPlaylist(const string & aPlaylistName){
-	for (vector<Playlist*>::iterator itr = playlists.begin() ; itr != playlists.end(); ++itr)
-		if(((*itr)->getName()).compare(aPlaylistName) == 0) return *itr;
-	return NULL;
+    for (vector<Playlist*>::iterator itr = playlists.begin() ; itr != playlists.end(); ++itr)
+        if(((*itr)->getName()).compare(aPlaylistName) == 0) return *itr;
+    return NULL;
 }
 void User::addPlaylist(Playlist & aPlaylist){
-	//add playlist if it does not already exist
-	vector<Playlist*>::iterator itr = findPosition(aPlaylist);
-	if(itr == playlists.end()) {
-		playlists.push_back(&aPlaylist);
-	}	
+    //add playlist if it does not already exist
+    vector<Playlist*>::iterator itr = findPosition(aPlaylist);
+    if(itr == playlists.end()) {
+        playlists.push_back(&aPlaylist);
+    }
 }
 void User::removePlaylist(Playlist & aPlaylist){
-	vector<Playlist*>::iterator itr = findPosition(aPlaylist);
-	if(itr != playlists.end()) {
-	   Playlist * playlist = *itr;
-	   playlists.erase(itr);
-	   delete playlist;
-	}
+    vector<Playlist*>::iterator itr = findPosition(aPlaylist);
+    if(itr != playlists.end()) {
+        Playlist * playlist = *itr;
+        playlists.erase(itr);
+        delete playlist;
+    }
 }
 void User::removeTrack(Track & aTrack){
-	for (vector<Playlist*>::iterator itr = playlists.begin() ; itr != playlists.end(); ++itr){
-		Playlist * playlist = *itr;
-		playlist->removeTrack(aTrack);
-	}
+    for (vector<Playlist*>::iterator itr = playlists.begin() ; itr != playlists.end(); ++itr){
+        Playlist * playlist = *itr;
+        playlist->removeTrack(aTrack);
+    }
 
 }
 string User::toString()const {
-	string indent = "     ";
-	string s;
-	s.append(userid + " " + name);
-	s.append("\n");
-	s.append(indent + "Playlists:\n");
-	for (vector<Playlist*>::size_type i = 0 ; i < playlists.size(); i++){
-		   s.append(indent + to_string(i) + " " + (playlists[i])->toString() + "\n");
-		   s.append("\n");
-	}
-	
-	return s;
-}
-void User::update(string PLName, int state, int id, Playlist *sub) {
-	if(state == 1)
-	{
-		for(vector<Track*>::iterator itr = sub->getTracks().begin() ; itr != sub->getTracks().end(); ++itr)
-			if((*itr)->getID() == id){this->findPlaylist(PLName)->addTrack((**itr));}
-	}
-	else
-	{
-		for(vector<Track*>::iterator itr = this->findPlaylist(PLName)->getTracks().begin() ; itr != this->findPlaylist(PLName)->getTracks().end(); ++itr)
-			if((*itr)->getID() == id){this->findPlaylist(PLName)->removeTrack((**itr));}
-	}
+    string indent = "     ";
+    string s;
+    s.append(userid + " " + name);
+    s.append("\n");
+    s.append(indent + "Playlists:\n");
+    for (vector<Playlist*>::size_type i = 0 ; i < playlists.size(); i++){
+        s.append(indent + to_string(i) + " " + (playlists[i])->toString() + "\n");
+        s.append("\n");
+    }
 
+    return s;
+}
+void User::update(string PLName, int state, int id, Playlist *pl) {
+    cout << "MADE IT!!" << endl;
+    if(state == 1)
+    {
+        cout << "IN HERE" << endl;
+        for(vector<Track*>::iterator itr = pl->getTracks().begin() ; itr != pl->getTracks().end(); ++itr) {
+            if((*itr)->getID() == id){
+                this->findPlaylist(PLName)->addTrack((**itr));
+            }
+        }
+    }
+    else
+    {
+        cout << "IN HERE 2" << endl;
+        for(vector<Track*>::iterator itr = this->findPlaylist(PLName)->getTracks().begin() ; itr != this->findPlaylist(PLName)->getTracks().end(); ++itr) {
+            if ((*itr)->getID() == id) {
+                this->findPlaylist(PLName)->removeTrack((**itr));
+            }
+        }
+    }
 }
 
 void User::executeAttach(User *sub, Playlist *pl)
 {
-	pl->subscribe(this,sub,pl);
-	Playlist subPL(pl->getName());
-	for (vector<Track*>::iterator itr = pl->getTracks().begin() ; itr != pl->getTracks().end(); ++itr)
-	{
-		Track *t = (*itr);//not sure if this makes a copy of the pointer maybe this should be a refrence
-        subPL.addTrack(*t);
-	}
-    sub->addPlaylist(subPL);
+    pl->subscribe(this,sub,pl);
 
+    //remove old playlist
+    Playlist *subPL = sub->findPlaylist(pl->getName());
+    sub->removePlaylist(*subPL);
+
+    //make new playlist
+    Playlist * playlist = new Playlist(pl->getName());
+    sub->addPlaylist(*playlist);
+
+    //populate sub playlist
+    for (vector<Track*>::iterator itr = pl->getTracks().begin() ; itr != pl->getTracks().end(); ++itr)
+    {
+        subPL->addTrack(**itr);
+    }
 };
 
 void User::executeDetach(User *sub, Playlist *pl)
@@ -123,6 +137,6 @@ void User::executeDetach(User *sub, Playlist *pl)
 
 
 ostream & operator<<(ostream & out, const User & aUser){
-	out << aUser.toString() << endl;
-	return out;
+    out << aUser.toString() << endl;
+    return out;
 }
