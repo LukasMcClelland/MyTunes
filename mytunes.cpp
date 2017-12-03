@@ -373,11 +373,21 @@ void MyTunes::executeDeleteSong(Command cmd){
 }
 
 void MyTunes::executeCMDFOLLOW(Command cmd){
+
+    enum arguments {FOLLOW, _U, FOLLOWERID, _P, PLAYLIST_NAME, STOPORFOLLOW, FOLLOWEDID};
     //check for proper syntax
-	if(cmd.hasToken("-u") && cmd.hasToken("-p") && cmd.hasToken("-f") && cmd.hasToken("follow")){
+	if(cmd.hasToken("-u") && cmd.hasToken("-p") && (cmd.hasToken("-f") || cmd.hasToken("-s")) && cmd.hasToken("follow")){
 
         string followerUserIdFromCMD = cmd.getToken("-u");
-        string followedUserIdFromCMD = cmd.getToken("-f");
+
+        string followedUserIdFromCMD;
+        if(cmd.hasToken("-f")) {
+            followedUserIdFromCMD = cmd.getToken("-f");
+        }
+        else if(cmd.hasToken("-s")){
+            followedUserIdFromCMD = cmd.getToken("-s");
+        }
+
 
         //if user tries to follow their own playlist
         if(followerUserIdFromCMD == followedUserIdFromCMD){
@@ -385,10 +395,10 @@ void MyTunes::executeCMDFOLLOW(Command cmd){
         }
 
         //stop following a playlist
-        else if(cmd.hasToken("stop")){
+        else if(cmd.hasToken("-s")){
             User *followerToCheck = users.findByID(followerUserIdFromCMD);
             if(followerToCheck->findPlaylist(cmd.getToken("-p")) != NULL) {
-                executeDetach(cmd);
+                detach(cmd);
             }
             else{
                 view.printOutput("\n\nCannot stop following a nonexistent playlist.\n");
@@ -401,7 +411,7 @@ void MyTunes::executeCMDFOLLOW(Command cmd){
             User *followerToCheck = users.findByID(followerUserIdFromCMD);
             User *followedToCheck = users.findByID(followedUserIdFromCMD);
             if(followedToCheck->findPlaylist(cmd.getToken("-p")) != NULL && followerToCheck->findPlaylist(cmd.getToken("-p")) != NULL) {
-                executeAttach(cmd);
+                attach(cmd);
             }
             else{
                 view.printOutput("\n\nCannot follow that playlist.\nEach user must have an existing playlist of the same name.\n");
@@ -416,10 +426,27 @@ void MyTunes::executeCMDFOLLOW(Command cmd){
 	}
 }
 
-void MyTunes::executeDetach(Command cmd){
-	cout << "\nDETACH CABLE\n";
+void MyTunes::detach(Command cmd){
+    string followerUserId = cmd.getToken("-u");
+    string followedUserId = cmd.getToken("-s");
+    string playlistId = cmd.getToken("-p");
+    User *tempFollower = users.findByID(followerUserId);
+    User *tempFollowed = users.findByID(followedUserId);
+
+    Playlist *tempUsersPlaylist = tempFollowed->findPlaylist(playlistId);
+
+    tempFollowed->executeDetach(tempFollower, tempUsersPlaylist);
+
 }
 
-void MyTunes::executeAttach(Command cmd){
-	cout << "\nFIRING TOW CABLE\n";
+void MyTunes::attach(Command cmd){
+    string followerUserId = cmd.getToken("-u");
+    string followedUserId = cmd.getToken("-f");
+    string playlistId = cmd.getToken("-p");
+
+    User *tempFollower = users.findByID(followerUserId);
+    User *tempFollowed = users.findByID(followedUserId);
+    Playlist *tempUsersPlaylist = tempFollowed->findPlaylist(playlistId);
+
+    tempFollowed->executeAttach(tempFollower, tempUsersPlaylist);
 }
