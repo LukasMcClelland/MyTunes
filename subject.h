@@ -5,23 +5,32 @@
 #include <string>
 #include "observer.h"
 #include <algorithm>
+#include <iostream>
+
 using namespace std;
 
-
+class Playlist;
 class Subject
 {
 private:
-    std::vector<observer*> followers;
+    vector<observer*> followers;
 
 public:
     void subscribe(observer *master, observer *sub, Subject *p) {
         p->followers.push_back(sub);
     };
     void unsub(observer *master, observer *sub, Subject *p) {
-        followers.erase(remove(followers.begin(),followers.end(), sub),followers.end());
+        for(vector<observer*>::iterator it = followers.begin(); it != followers.end(); ++it){
+            if((*it) == sub){
+                followers.erase(it);
+                break;
+            }
+        }
     };
-    void notify(string pLName, int state, int Id, Subject *subject) {
-        for(vector<observer*>::iterator it = followers.begin(); it!=followers.end(); ++it) {(*it)->update(pLName,state,Id,this);}
+    void notify(string pLName, int state, int Id, Playlist *pl) {
+        for(vector<observer*>::iterator it = followers.begin(); it!=followers.end(); ++it) {
+            (*it)->update(pLName,state,Id,pl);
+        }
     };
 };
 
