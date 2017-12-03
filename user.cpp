@@ -90,10 +90,8 @@ string User::toString()const {
     return s;
 }
 void User::update(string PLName, int state, int id, Playlist *pl) {
-    cout << "MADE IT!!" << endl;
     if(state == 1)
     {
-        cout << "IN HERE" << endl;
         for(vector<Track*>::iterator itr = pl->getTracks().begin() ; itr != pl->getTracks().end(); ++itr) {
             if((*itr)->getID() == id){
                 this->findPlaylist(PLName)->addTrack((**itr));
@@ -102,7 +100,6 @@ void User::update(string PLName, int state, int id, Playlist *pl) {
     }
     else
     {
-        cout << "IN HERE 2" << endl;
         for(vector<Track*>::iterator itr = this->findPlaylist(PLName)->getTracks().begin() ; itr != this->findPlaylist(PLName)->getTracks().end(); ++itr) {
             if ((*itr)->getID() == id) {
                 this->findPlaylist(PLName)->removeTrack((**itr));
