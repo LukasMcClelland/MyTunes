@@ -18,7 +18,7 @@ command.o:	command.cpp command.h
 song.o:	song.cpp song.h 
 	g++ -c -std=c++11 song.cpp
 	
-user.o:	user.cpp user.h observer.h
+user.o:	user.cpp user.h observer.h subject.h
 	g++ -c -std=c++11 user.cpp
 
 playlist.o:	playlist.cpp playlist.h subject.h
