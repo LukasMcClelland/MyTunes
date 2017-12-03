@@ -1,0 +1,19 @@
+show users -u ajones
+add -p cindy favourites
+follow -u fjones -p favourites -f ajones
+follow -u cindy -p songs -f cindy
+follow -u fjones -p mysongs -f gjones
+show users -u fjones
+show users -u ajones
+add -l fjones favourites 22
+show users -u fjones
+show users -u ajones
+follow -u ajones -p favourites -s fjones
+add -l ajones favourites 62
+show users -u fjones
+show users -u ajones
+delete -u ajones -p favourites
+show users -u ajones
+add -p ajones favourites
+show users -u ajones
+show users -u fjones
