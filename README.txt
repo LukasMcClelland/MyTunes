@@ -34,11 +34,17 @@ that will be updated by the master user
 
 Subscribe syntax example:
 
-	Follow -u ajones -p favourites -f fjones
+	follow -u ajones -p favourites -f fjones
 
-unSub syntax example: 
+unSub syntax example:
 
 	follow -u ajones -p favourites -s fjones
+
+There is also a new script that tests the functionality of following a playlist, stop following a playlist,
+adding and deleting tracks from a followed playlist and some other things. It can be executed by typing:
+
+	.read s3.txt
+
 
 Assingment ReV 4.1 Bonus:
 
